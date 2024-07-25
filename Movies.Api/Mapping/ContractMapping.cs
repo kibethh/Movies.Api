@@ -1,5 +1,7 @@
-﻿using Movies.Application.Models;
+﻿using Microsoft.AspNetCore.Http.Features;
+using Movies.Application.Models;
 using Movies.Contracts.Requests;
+using Movies.Contracts.Responses;
 
 namespace Movies.Api.Mapping
 {
@@ -15,6 +17,25 @@ namespace Movies.Api.Mapping
                 YearOfRelease = request.YearOfRelease,
 
             };
+        }
+
+        public static MovieResponse MapToResponse (this Movie movie)
+        {
+            return new MovieResponse
+            {
+                Id = movie.Id,
+                Title = movie.Title,
+                Genres = movie.Genres.ToList(),
+                YearOfRelease = movie.YearOfRelease,
+
+            };
+        }
+
+
+        public static MoviesResponse MapToResponse(this IEnumerable<Movie> movies)
+        {
+            return new MoviesResponse { Items = movies.Select(MapToResponse) };
+           
         }
     }
 }
