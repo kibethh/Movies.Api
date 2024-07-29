@@ -20,26 +20,50 @@ namespace Movies.Api.Controllers
         {
             var movie = request.MapToMovie();
              await _movieRepository.CreateAsync(movie);
-            return Created($"{ApiEndpoint.Movies.Create}/{movie.Id}", movie);
+            return CreatedAtAction(nameof(Get), new { idOrSlug = movie.Id}, movie);
         }
 
-        [HttpPost(ApiEndpoint.Movies.Get)]
-        public async Task<IActionResult> Get([FromRoute] Guid id)
+        [HttpGet(ApiEndpoint.Movies.Get)]
+        public async Task<IActionResult> Get([FromRoute] string idOrSlug)
         {
-            var movie = await _movieRepository.GetByIdAsync(id);
-            if(movie is null)
+            var movie = Guid.TryParse(idOrSlug, out var id) ? await _movieRepository.GetByIdAsync(id) : await _movieRepository.GetBySlugAsync(idOrSlug);
+            if (movie is null)
             {
                 return NotFound();
             }
             return Ok(movie.MapToResponse());
         }
 
-        [HttpPost(ApiEndpoint.Movies.GetAll)]
+        [HttpGet(ApiEndpoint.Movies.GetAll)]
         public async Task<IActionResult> GetAll()
         {
             var movies = await _movieRepository.GetAllAsync();
            
             return Ok(movies.MapToResponse());
+        }
+
+        [HttpPut(ApiEndpoint.Movies.Update)]
+        public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateMovieRequest request)
+        {
+            var movie = request.MapToMovie(id);
+            var updated = await _movieRepository.UpdateAsync(movie);
+            if (!updated)
+            {
+                return NotFound();
+            }
+            var response = movie.MapToResponse();
+            return Ok(response);
+        }
+
+        [HttpDelete(ApiEndpoint.Movies.Delete)]
+        public async Task<IActionResult> Delete([FromRoute] Guid id)
+        {
+            var deleted = await _movieRepository.DeleteByIdAsync(id);
+            if (!deleted)
+            {
+                return NotFound();
+            }
+            return Ok();
         }
     }
 }

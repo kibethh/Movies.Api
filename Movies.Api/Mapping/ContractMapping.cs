@@ -2,6 +2,7 @@
 using Movies.Application.Models;
 using Movies.Contracts.Requests;
 using Movies.Contracts.Responses;
+using static Movies.Api.ApiEndpoint;
 
 namespace Movies.Api.Mapping
 {
@@ -25,6 +26,7 @@ namespace Movies.Api.Mapping
             {
                 Id = movie.Id,
                 Title = movie.Title,
+                Slug = movie.Slug,
                 Genres = movie.Genres.ToList(),
                 YearOfRelease = movie.YearOfRelease,
 
@@ -36,6 +38,18 @@ namespace Movies.Api.Mapping
         {
             return new MoviesResponse { Items = movies.Select(MapToResponse) };
            
+        }
+
+        public static Movie MapToMovie(this UpdateMovieRequest request,Guid id)
+        {
+            return new Movie
+            {
+                Id=id,
+                Title = request.Title,
+                Genres = request.Genres.ToList(),
+                YearOfRelease = request.YearOfRelease,
+
+            };
         }
     }
 }
