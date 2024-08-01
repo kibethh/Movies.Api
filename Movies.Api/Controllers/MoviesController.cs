@@ -17,7 +17,7 @@ public class MoviesController : ControllerBase
     }
 
     [HttpPost(ApiEndpoints.Movies.Create)]
-    public async Task<IActionResult> Create([FromBody] CreateMovieRequest request,
+    public async Task<IActionResult> Create([FromBody]CreateMovieRequest request,
         CancellationToken token)
     {
         var movie = request.MapToMovie();
@@ -52,8 +52,8 @@ public class MoviesController : ControllerBase
     }
 
     [HttpPut(ApiEndpoints.Movies.Update)]
-    public async Task<IActionResult> Update([FromRoute] Guid id,
-        [FromBody] UpdateMovieRequest request,
+    public async Task<IActionResult> Update([FromRoute]Guid id,
+        [FromBody]UpdateMovieRequest request,
         CancellationToken token)
     {
         var movie = request.MapToMovie(id);

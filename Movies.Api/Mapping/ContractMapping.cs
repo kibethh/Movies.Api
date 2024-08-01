@@ -1,55 +1,50 @@
-﻿using Microsoft.AspNetCore.Http.Features;
-using Movies.Application.Models;
+﻿using Movies.Application.Models;
 using Movies.Contracts.Requests;
 using Movies.Contracts.Responses;
-using static Movies.Api.ApiEndpoint;
 
-namespace Movies.Api.Mapping
+namespace Movies.Api.Mapping;
+
+public static class ContractMapping
 {
-    public static class ContractMapping
+    public static Movie MapToMovie(this CreateMovieRequest request)
     {
-        public static Movie MapToMovie (this CreateMovieRequest request)
+        return new Movie
         {
-            return new Movie
-            {
-                Id = Guid.NewGuid(),
-                Title = request.Title,
-                Genres = request.Genres.ToList(),
-                YearOfRelease = request.YearOfRelease,
-
-            };
-        }
-
-        public static MovieResponse MapToResponse (this Movie movie)
+            Id = Guid.NewGuid(),
+            Title = request.Title,
+            YearOfRelease = request.YearOfRelease,
+            Genres = request.Genres.ToList()
+        };
+    }
+    
+    public static Movie MapToMovie(this UpdateMovieRequest request, Guid id)
+    {
+        return new Movie
         {
-            return new MovieResponse
-            {
-                Id = movie.Id,
-                Title = movie.Title,
-                Slug = movie.Slug,
-                Genres = movie.Genres.ToList(),
-                YearOfRelease = movie.YearOfRelease,
+            Id = id,
+            Title = request.Title,
+            YearOfRelease = request.YearOfRelease,
+            Genres = request.Genres.ToList()
+        };
+    }
 
-            };
-        }
-
-
-        public static MoviesResponse MapToResponse(this IEnumerable<Movie> movies)
+    public static MovieResponse MapToResponse(this Movie movie)
+    {
+        return new MovieResponse
         {
-            return new MoviesResponse { Items = movies.Select(MapToResponse) };
-           
-        }
+            Id = movie.Id,
+            Title = movie.Title,
+            Slug = movie.Slug,
+            YearOfRelease = movie.YearOfRelease,
+            Genres = movie.Genres
+        };
+    }
 
-        public static Movie MapToMovie(this UpdateMovieRequest request,Guid id)
+    public static MoviesResponse MapToResponse(this IEnumerable<Movie> movies)
+    {
+        return new MoviesResponse
         {
-            return new Movie
-            {
-                Id=id,
-                Title = request.Title,
-                Genres = request.Genres.ToList(),
-                YearOfRelease = request.YearOfRelease,
-
-            };
-        }
+            Items = movies.Select(MapToResponse)
+        };
     }
 }

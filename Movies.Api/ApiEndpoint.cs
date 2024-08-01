@@ -1,6 +1,6 @@
 ﻿namespace Movies.Api
 {
-    public static class ApiEndpoint
+    public static class ApiEndpoints
     {
 
         private const string ApiBase = "api";

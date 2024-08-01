@@ -4,9 +4,9 @@ namespace Movies.Application.Database;
 
 public class DbInitializer
 {
-    private readonly IDBConnectionFactory _dbConnectionFactory;
+    private readonly IDbConnectionFactory _dbConnectionFactory;
 
-    public DbInitializer(IDBConnectionFactory dbConnectionFactory)
+    public DbInitializer(IDbConnectionFactory dbConnectionFactory)
     {
         _dbConnectionFactory = dbConnectionFactory;
     }
